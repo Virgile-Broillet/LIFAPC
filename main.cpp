@@ -9,6 +9,7 @@
 void creeFichierEntiers(const char * nomFichier, int nb)
 //preconditions : nomFichier chaine de caracteres designant le nom du fichier a creer
 //postcondition : le fichier nomFichier contient nb entiers separes par des espaces
+//glucked
 {
   std::ofstream ofs;
   ofs.open(nomFichier);
