@@ -15,17 +15,28 @@
 using namespace std;
 
 class Image1D {
-    unsigned int lenght;
-    unsigned int width;
+private:
+    unsigned int length; // Longueur de l'image
+    unsigned int width; // Largeur de l'image
+    int maxIntensity; // Intensité maximale (255 pour PGM)
     
-    vector<int> data;
+    vector<int> data; // Pixels de l'image en tableau 1D
     
 public:
-    // Constructeurs
-    Image1D(int lenght, int width);
-    ~Image1D();
-    
-    bool loadPGM(const string& filename); // Charger une image PGM
-    bool savePGM(const string& filename) const; // Sauvegarder en PGM
+    // Constructeur par défaut
+    Image1D() : length(0), width(0), maxIntensity(255), data() {}
 
+    // Constructeur avec initialisation
+    Image1D(int length, int width, int maxIntensity = 255)
+        : length(length), width(width), maxIntensity(maxIntensity), data(length * width, 255) {}
+    
+    void loadPGM(const string& filename); // Charger une image PGM
+    void savePGM(const string& filename) const; // Sauvegarder en PGM
+    
+    // Accès aux pixels
+    int getPixel(int i, int j) const;
+    void setPixel(int i, int j, int value);
+
+    // Conversion entre index 2D et 1D
+    int index1D(int i, int j) const;
 };

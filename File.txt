@@ -1,0 +1,30 @@
+int main() {
+    try {
+        // Création d'une image vide
+        Image1D img;
+
+        // Charger une image PGM depuis un fichier
+        std::cout << "Chargement de l'image 'input.pgm'...\n";
+        img.loadPGM("input.pgm");
+
+        // Afficher quelques informations sur l'image chargée
+        std::cout << "Image chargée :\n";
+        std::cout << "Dimensions : " << img.getLength() << "x" << img.getWidth() << "\n";
+        std::cout << "Intensité maximale : " << img.getMaxIntensity() << "\n";
+
+        // Modifier un pixel pour tester
+        int x = 5, y = 5; // Coordonnées arbitraires
+        std::cout << "Modification du pixel (" << x << ", " << y << ")...\n";
+        img.setPixel(x, y, 100);
+
+        // Sauvegarder l'image modifiée
+        std::cout << "Sauvegarde de l'image modifiée dans 'output.pgm'...\n";
+        img.savePGM("output.pgm");
+
+        std::cout << "Terminé ! L'image modifiée a été sauvegardée avec succès.\n";
+    } catch (const std::exception& e) {
+        std::cerr << "Erreur : " << e.what() << "\n";
+    }
+
+    return 0;
+}

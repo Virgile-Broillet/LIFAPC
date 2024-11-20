@@ -5,7 +5,9 @@
 #include <cstdio>
 #include <fstream> //ifstream, ofstream
 #include <cstdlib> //exit
+#include "hpp/Image1D.hpp"
 
+/*
 void creeFichierEntiers(const char * nomFichier, int nb)
 //preconditions : nomFichier chaine de caracteres designant le nom du fichier a creer
 //postcondition : le fichier nomFichier contient nb entiers separes par des espaces
@@ -39,17 +41,30 @@ void litFichierEntiers(const char * nomFichier)
     std::cout<<"Entier suivant "<<temp<< std::endl;
   ifs.close();
 }
+*/
+int main() {
+    try {
+        // Création d'une image vide
+        Image1D img;
 
-int main()
-{
-  char fich[100]; 
-  int n;
-  std::cout << "Entrez le nom du fichier d'entiers a creer" << std::endl;
-  std::scanf("%99s",fich);
-  std::cout << "Combien d'entiers dans ce fichier ?" << std::endl;
-  std::cin >> n;
-  creeFichierEntiers(fich,n);
-  std::cout << "Affichage des entiers contenu dans le fichier" << std::endl;
-  litFichierEntiers(fich);
-  return 0;
+        // Charger une image PGM depuis un fichier
+        std::cout << "Chargement de l'image 'input.pgm'...\n";
+        img.loadPGM("input.pgm");
+
+
+        // Modifier un pixel pour tester
+        int x = 5, y = 5; // Coordonnées arbitraires
+        std::cout << "Modification du pixel (" << x << ", " << y << ")...\n";
+        img.setPixel(x, y, 100);
+
+        // Sauvegarder l'image modifiée
+        std::cout << "Sauvegarde de l'image modifiée dans 'output.pgm'...\n";
+        img.savePGM("output.pgm");
+
+        std::cout << "Terminé ! L'image modifiée a été sauvegardée avec succès.\n";
+    } catch (const std::exception& e) {
+        std::cerr << "Erreur : " << e.what() << "\n";
+    }
+
+    return 0;
 }
