@@ -12,10 +12,8 @@
 
 using namespace std;
 
-Image1D::Image1D(){
-    Image1D * im = new Image1D;
-    im->Largeur = this->Largeur;
-    im->Largeur = this->Largeur;
+Image1D::Image1D(int length, int width){
+    Image1D * im = new Image1D(length, width);
     //
 }
 
