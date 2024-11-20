@@ -9,9 +9,7 @@
 void creeFichierEntiers(const char * nomFichier, int nb)
 //preconditions : nomFichier chaine de caracteres designant le nom du fichier a creer
 //postcondition : le fichier nomFichier contient nb entiers separes par des espaces
-
-
-
+// wsh
 {
   std::ofstream ofs;
   ofs.open(nomFichier);
