@@ -11,6 +11,8 @@
 #include <iostream>
 #include "fstream"
 
+#define BLACK_PIXEL 0
+
 using namespace std;
 
 void Image1D::loadPGM(const string& filename) {
@@ -132,4 +134,70 @@ int Image1D::getPixelNW(int i, int j) const{
         return -1;
     }
     return data[index1D(i+1, j-1)];
+}
+
+int Image1D::getLength(){
+    return this->length;
+}
+
+int Image1D::getWidth(){
+    return this->width;
+}
+
+void Image1D::multiSourceDijkstra(const Image1D& image, vector<int>& distances, vector<int>& predecessors) {
+    int n = image.length * image.width;
+    const int INF = INT_MAX;
+    
+    // Initialisation des distances et prédécesseurs
+    distances.assign(n, INF);
+    predecessors.assign(n, -1);
+    vector<bool> visited(n, false);
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<>> pq;
+
+    // Initialisation des sources (pixels noirs)
+    for (int i = 0; i < n; ++i) {
+        if (image.data[i] == BLACK_PIXEL) { // BLACK_PIXEL est une constante représentant les pixels noirs initialisé à 0
+            distances[i] = 0;
+            pq.emplace(0, i);
+        }
+    }
+
+    // Directions pour les voisins (horizontal, vertical, diagonal)
+    vector<pair<int, int>> directions = {
+        {0, 1}, {0, -1}, {1, 0}, {-1, 0},
+        {1, 1}, {1, -1}, {-1, 1}, {-1, -1}
+    };
+
+    // Dijkstra
+    while (!pq.empty()) {
+        auto [currentDist, current] = pq.top();
+        pq.pop();
+
+        if (visited[current]) continue;
+        visited[current] = true;
+
+        int x = current / image.width;
+        int y = current % image.width;
+
+        // Parcourir les voisins
+        for (const auto& [dx, dy] : directions) {
+            int nx = x + dx;
+            int ny = y + dy;
+
+            if (nx >= 0 && nx < image.length && ny >= 0 && ny < image.width) {
+                int neighbor = nx * image.width + ny;
+                if (visited[neighbor]) continue;
+
+                // Calcul du coût
+                int cost = (abs(dx) + abs(dy) == 2) ? 3 : 2;
+                int newDist = currentDist + cost;
+
+                if (newDist < distances[neighbor]) {
+                    distances[neighbor] = newDist;
+                    predecessors[neighbor] = current;
+                    pq.emplace(newDist, neighbor);
+                }
+            }
+        }
+    }
 }

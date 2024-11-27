@@ -64,5 +64,11 @@ public:
     
     //get pixel Nord Ouest
     int getPixelNW(int i, int j) const;
+    
+    int getLength();
+    
+    int getWidth();
+    
+    void multiSourceDijkstra(const Image1D& image, vector<int>& distances, vector<int>& predecessors);
 
 };

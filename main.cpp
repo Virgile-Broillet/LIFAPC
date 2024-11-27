@@ -44,9 +44,54 @@ void litFichierEntiers(const char * nomFichier)
 */
 int main() {
     try {
+        // Charger une image PGM
+                Image1D image;
+                image.loadPGM("/Users/virgilebroillet/Library/Mobile Documents/com~apple~CloudDocs/Documents/Lyon 1/Licence 3 (2024-2025)/Semestre 5/Algo Prog Complexité/TP9 (Projet)/LIFAPC/ex2.pgm");  // Nom du fichier PGM à charger
+
+                // Initialiser les tableaux pour les distances et les prédécesseurs
+                vector<int> distances;
+                vector<int> predecessors;
+
+                // Appeler l'algorithme de Dijkstra multi-source
+                image.multiSourceDijkstra(image, distances, predecessors);
+
+                // Afficher les résultats
+                int length = image.getLength();
+                int width = image.getWidth();
+
+                cout << "Distances :" << endl;
+                for (int i = 0; i < length; ++i) {
+                    for (int j = 0; j < width; ++j) {
+                        cout << distances[i * width + j] << " ";
+                    }
+                    cout << endl;
+                }
+
+                cout << "Prédécesseurs :" << endl;
+                for (int i = 0; i < length; ++i) {
+                    for (int j = 0; j < width; ++j) {
+                        cout << predecessors[i * width + j] << " ";
+                    }
+                    cout << endl;
+                }
+
+                // Exemple d'exploitation : trouver le pixel noir le plus proche d'un pixel donné
+                int x = 10, y = 10;  // Coordonnées du pixel d'intérêt
+                int idx = x * width + y;
+
+                cout << "Distance depuis (" << x << ", " << y << ") : " << distances[idx] << endl;
+
+                // Remonter le chemin
+                cout << "Chemin le plus court depuis (" << x << ", " << y << ") :";
+                while (idx != -1) {
+                    cout << " (" << idx / width << ", " << idx % width << ")";
+                    idx = predecessors[idx];
+                }
+                cout << endl;
+        /**
         // Création d'une image vide
         Image1D img;
-        string filename = "ex1.pgm";
+        string filename = "ex2.pgm";
 
         // Charger une image PGM depuis un fichier
         std::cout << "Chargement de l'image" << filename <<"...\n";
@@ -66,10 +111,10 @@ int main() {
 
         int aa = img.getPixelN(0,2);
         std::cout<<aa<<std::endl;
-        
+        */
     } catch (const std::exception& e) {
         std::cerr << "Erreur : " << e.what() << "\n";
     }
-
+    
     return 0;
 }
