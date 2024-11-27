@@ -13,14 +13,17 @@
 
 using namespace std;
 
-void Image1D::loadPGM(const std::string& filename) {
-    std::ifstream file(filename);
-    if (!file.is_open()) throw std::runtime_error("Impossible d'ouvrir le fichier.");
+void Image1D::loadPGM(const string& filename) {
+    ifstream file(filename);
+    //fichier ouvert?
+    if (!file.is_open()) throw runtime_error("Impossible d'ouvrir le fichier.");
 
-    std::string header;
+    //fichier pgm?
+    string header;
     file >> header;
-    if (header != "P2") throw std::runtime_error("Format PGM non valide.");
+    if (header != "P2") throw runtime_error("Format PGM non valide.");
 
+    //
     file >> length >> width >> maxIntensity;
     data.resize(length * width);
 
@@ -31,9 +34,9 @@ void Image1D::loadPGM(const std::string& filename) {
     file.close();
 }
 
-void Image1D::savePGM(const std::string& filename) const {
-    std::ofstream file(filename);
-    if (!file.is_open()) throw std::runtime_error("Impossible de sauvegarder le fichier.");
+void Image1D::savePGM(const string& filename) const {
+    ofstream file(filename);
+    if (!file.is_open()) throw runtime_error("Impossible de sauvegarder le fichier.");
 
     file << "P2\n" << length << " " << width << "\n" << maxIntensity << "\n";
 
@@ -56,32 +59,77 @@ void Image1D::setPixel(int i, int j, int value) {
 }
 
 int Image1D::index1D(int i, int j) const {
-    return i * length + j;
+    return ((i * length) + j);
 }
 
-
-bool readPGM(const string&filename){
-    ifstream file(filename);
-    //verifie si le fichier est ouvert
-    if (!file.is_open()) {
-            cerr << "Error: Fichier pas ouvert: " << filename << endl;
-            return false;
-        }
-    // Vérification du format
-    char lettre[3];
-    file.get(lettre, 3); // Lit les deux premiers caractères
-    if (lettre[0] != 'P' || lettre[1] != '2') {
-        cerr << "Error : Format non PGM." << endl;
-        return false;
+//get pixel ouest du global:
+int Image1D::getPixelW(int i, int j) const{
+    //verifier si le voisin existe
+    if(i==0){
+        return -1;
     }
-
-
-    file.close();
-    return true;
+    return data[index1D(i, j-1)];
 }
 
+//get pixel Sud Ouest
+int Image1D::getPixelSW(int i, int j)const{
+    //verifier si le voisin existe
+    if(i==0 || j==0){
+        return -1;
+    }
+    return data[index1D(i-1, j-1)];
+}
 
-void pgm_to_vector(const string&filename){
+//get pixel Sud
+int Image1D::getPixelS(int i, int j) const{
+    //verifier si le voisin existe
+    if(j==0){
+        return -1;
+    }
+    return data[index1D(i-1, j)];
+}
 
+//get pixel Sud Est
+int Image1D::getPixelSE(int i, int j) const{
+    //verifier si le voisin existe
+    if(i==length || j==0){
 
+    }
+    return data[index1D(i-1, j+1)];
+}
+
+//get pixel Est
+int Image1D::getPixelE(int i, int j) const{
+    //verifier si le voisin existe
+    if(i==length){
+        return -1;
+    }
+    return data[index1D(i-1, j-1)];
+}
+
+//get pixel Nord Est
+int Image1D::getPixelNE(int i, int j) const{
+    //verifier si le voisin existe
+    if(i==length || j==width){
+        return -1;
+    }
+    return data[index1D(i, j+1)];
+}
+
+//get pixel Nord
+int Image1D::getPixelN(int i, int j) const{
+    //verifier si le voisin existe
+    if(j==width){
+        return -1;
+    }
+    return data[index1D(i+1, j)];
+}
+    
+//get pixel Nord Ouest
+int Image1D::getPixelNW(int i, int j) const{
+    //verifier si le voisin existe
+    if(i==0 || j==width){
+        return -1;
+    }
+    return data[index1D(i+1, j-1)];
 }

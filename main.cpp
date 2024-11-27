@@ -54,15 +54,19 @@ int main() {
 
 
         // Modifier un pixel pour tester
-        int x = 5, y = 5; // Coordonnées arbitraires
+        int x = 2, y = 2; // Coordonnées arbitraires
         std::cout << "Modification du pixel (" << x << ", " << y << ")...\n";
-        img.setPixel(x, y, 100);
+        img.setPixel(x, y, 255);
 
         // Sauvegarder l'image modifiée
         std::cout << "Sauvegarde de l'image modifiée dans 'output.pgm'...\n";
         img.savePGM("output.pgm");
 
         std::cout << "Terminé ! L'image modifiée a été sauvegardée avec succès.\n";
+
+        int aa = img.getPixelN(0,2);
+        std::cout<<aa<<std::endl;
+        
     } catch (const std::exception& e) {
         std::cerr << "Erreur : " << e.what() << "\n";
     }

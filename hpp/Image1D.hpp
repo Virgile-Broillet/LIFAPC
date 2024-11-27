@@ -41,10 +41,28 @@ public:
     // Conversion entre index 2D et 1D
     int index1D(int i, int j) const;
 
-    // Verification du fichier
-    bool readPGM(const string&filename);
+    //get pixel ouest du global:
+    int getPixelW(int i, int j) const;
 
-    //procedure qui prend un fichier pgm et "rempli" les donnees de l'image1D
-    void pgm_to_vector(const string&filename);
+    //get pixel sud Ouest
+    int getPixelSW(int i, int j) const;
+
+    //get pixel Sud
+    int getPixelS(int i, int j) const;
+
+    //get pixel Sud Est
+    int getPixelSE(int i, int j) const;
+
+    //get pixel Est
+    int getPixelE(int i, int j) const;
+
+    //get pixel Nord Est
+    int getPixelNE(int i, int j) const;
+
+    //get pixel Nord
+    int getPixelN(int i, int j) const;
+    
+    //get pixel Nord Ouest
+    int getPixelNW(int i, int j) const;
 
 };
