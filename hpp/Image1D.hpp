@@ -10,6 +10,7 @@
 
 
 #include <iostream>
+#include <string>
 #include <vector>
 
 using namespace std;
@@ -39,4 +40,11 @@ public:
 
     // Conversion entre index 2D et 1D
     int index1D(int i, int j) const;
+
+    // Verification du fichier
+    bool readPGM(const string&filename);
+
+    //procedure qui prend un fichier pgm et "rempli" les donnees de l'image1D
+    void pgm_to_vector(const string&filename);
+
 };

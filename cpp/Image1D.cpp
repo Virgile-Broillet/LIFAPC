@@ -58,3 +58,30 @@ void Image1D::setPixel(int i, int j, int value) {
 int Image1D::index1D(int i, int j) const {
     return i * length + j;
 }
+
+
+bool readPGM(const string&filename){
+    ifstream file(filename);
+    //verifie si le fichier est ouvert
+    if (!file.is_open()) {
+            cerr << "Error: Fichier pas ouvert: " << filename << endl;
+            return false;
+        }
+    // Vérification du format
+    char lettre[3];
+    file.get(lettre, 3); // Lit les deux premiers caractères
+    if (lettre[0] != 'P' || lettre[1] != '2') {
+        cerr << "Error : Format non PGM." << endl;
+        return false;
+    }
+
+
+    file.close();
+    return true;
+}
+
+
+void pgm_to_vector(const string&filename){
+
+
+}

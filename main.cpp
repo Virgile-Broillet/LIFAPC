@@ -46,10 +46,11 @@ int main() {
     try {
         // Création d'une image vide
         Image1D img;
+        string filename = "ex1.pgm";
 
         // Charger une image PGM depuis un fichier
-        std::cout << "Chargement de l'image 'input.pgm'...\n";
-        img.loadPGM("input.pgm");
+        std::cout << "Chargement de l'image" << filename <<"...\n";
+        img.loadPGM(filename);
 
 
         // Modifier un pixel pour tester
