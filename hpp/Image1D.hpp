@@ -4,7 +4,7 @@
             @file Image1D.hpp
             @brief
         
-            @copyright Copyright © 2024 - 2024+1 Virgile Broillet P2103804. All rights reserved for studying or personal use.
+            @copyright Copyright © 2024 Virgile Broillet P2103804. All rights reserved for studying or personal use.
         */
         
 
@@ -65,10 +65,18 @@ public:
     //get pixel Nord Ouest
     int getPixelNW(int i, int j) const;
     
-    int getLength();
+    int getLength() const;
     
-    int getWidth();
-    
+    int getWidth() const;
+        
     void multiSourceDijkstra(const Image1D& image, vector<int>& distances, vector<int>& predecessors);
+    
+    void saveDistancesPGM(const string& filename, const vector<int>& distances) const;
+
+    void createImageUnion(Image1D& image2, vector<int>& distancesUnion, vector<int>& predecessorsUnion);
+        
+    void savePredecessors(const string& filename, const vector<int>& predecessors) const;
+
+    void projectionPixel(const vector<int>& distances, const vector<int>& predecessors);
 
 };

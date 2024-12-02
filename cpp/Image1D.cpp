@@ -4,7 +4,7 @@
             @file Image1D.cpp
             @brief
         
-            @copyright Copyright © 2024 - 2024+1 Virgile Broillet P2103804. All rights reserved for studying or personal use.
+            @copyright Copyright © 2024 Virgile Broillet P2103804. All rights reserved for studying or personal use.
         */
 
 #include "../hpp/Image1D.hpp"
@@ -12,6 +12,7 @@
 #include "fstream"
 
 #define BLACK_PIXEL 0
+#define INT_MAX __INT_MAX__
 
 using namespace std;
 
@@ -136,11 +137,13 @@ int Image1D::getPixelNW(int i, int j) const{
     return data[index1D(i+1, j-1)];
 }
 
-int Image1D::getLength(){
+int Image1D::getLength() const
+{
     return this->length;
 }
 
-int Image1D::getWidth(){
+int Image1D::getWidth() const
+{
     return this->width;
 }
 
@@ -201,3 +204,99 @@ void Image1D::multiSourceDijkstra(const Image1D& image, vector<int>& distances, 
         }
     }
 }
+
+
+void Image1D::saveDistancesPGM(const std::string& filename, const std::vector<int>& distances) const {
+    std::ofstream file(filename);
+    if (!file.is_open()) throw std::runtime_error("Impossible de sauvegarder le fichier.");
+
+    file << "P2\n" << length << " " << width << "\n" << maxIntensity << "\n";
+
+    for (int i = 0; i < length; ++i) {
+        for (int j = 0; j < width; ++j) {
+            file << distances[index1D(i, j)] << " ";
+        }
+        file << "\n";
+    }
+
+    file.close();
+}
+
+void Image1D::createImageUnion(Image1D& image2, vector<int>& distancesUnion, vector<int>& predecessorsUnion) {
+    // Nous combinons les images de distance des deux formes
+    Image1D image1;
+    this->length = image1.getLength();
+    this->width = image1.getWidth();
+    this->data = image1.data;
+    this->maxIntensity = image1.maxIntensity;
+
+    vector<int> distances1(length * width);
+    vector<int> predecessors1(length * width);
+    vector<int> distances2(length * width);
+    vector<int> predecessors2(length * width);
+
+    image1.multiSourceDijkstra(image1, distances1, predecessors1);
+    image2.multiSourceDijkstra(image2, distances2, predecessors2);
+
+    // Combinaison des deux images de distance
+    for (int i = 0; i < length * width; ++i) {
+        if (distances1[i] < distances2[i]) {
+            distancesUnion[i] = distances1[i];
+            predecessorsUnion[i] = predecessors1[i];
+        } else {
+            distancesUnion[i] = distances2[i];
+            predecessorsUnion[i] = predecessors2[i];
+        }
+    }
+
+    cout << "Image de distance de l'union construite !" << endl;
+}
+
+void Image1D::savePredecessors(const std::string& filename, const std::vector<int>& predecessors) const {
+    std::ofstream file(filename);
+    if (!file.is_open()) throw std::runtime_error("Impossible de sauvegarder le fichier.");
+
+    for (int pred : predecessors) {
+        file << pred << " ";
+    }
+
+    file.close();
+}
+
+void Image1D::projectionPixel(const vector<int>& distances, const vector<int>& predecessors) {
+    int x= 0, y= 0; // Coordonnées du pixel d'intérêt
+    int length = this->length;
+    int width = this->width;
+    
+    cout << "Trouvé le Pixel noir le plus proche d'un Pixel :" << endl;
+    cout << "X (largeur) : "; cin >> x;
+    cout << "Y (hauteur) : "; cin >> y;
+
+    int idx = y * width + x;  // Utiliser y pour la hauteur et x pour la largeur dans le calcul de l'indice
+
+    if (x < 0 || x >= width || y < 0 || y >= length) {  // Vérifier les dimensions avec x en largeur et y en hauteur
+        cout << "Coordonnées invalides : x=" << x << ", y=" << y << ", longeur : " << length << ", largeur : " << width <<endl;
+        return;
+    }
+
+    if (idx < 0 || idx >= distances.size()) {
+        if (distances.size() == 0 ){
+            cout << "Créer l'image des distances SVP (étape 4)."<< endl;
+            return;
+        }else{
+            cout << "Indice invalide : idx=" << idx << ", taille distances=" << distances.size() << endl;
+            return;
+        }
+    }
+
+    cout << "Distance depuis (" << x << ", " << y << ") : " << distances[idx] << endl;
+
+    // Remonter le chemin
+    cout << "Chemin le plus court depuis (" << x << ", " << y << ") :";
+    while (idx != -1) {
+        cout << " (" << idx % width << ", " << idx / width << ")"; // Afficher les coordonnées avec x en largeur et y en hauteur
+        idx = predecessors[idx];
+    }
+    cout << endl;
+}
+
