@@ -24,6 +24,9 @@ void afficherMenu() {
     cout << "7. Quitter" << endl;
 }
 
+/**
+ @brief main
+ */
 int main() {
     Image1D image1, image2;
     vector<int> distances, predecessors;

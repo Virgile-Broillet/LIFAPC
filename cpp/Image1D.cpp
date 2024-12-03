@@ -1,10 +1,10 @@
 //
         /**
-            @author Created by Virgile Broillet P2103804 on 20/11/2024
+            @author Created by Virgile Broillet P2103804 & Salma Ahizoune Hiouas P2003590 on 20/11/2024
             @file Image1D.cpp
             @brief
         
-            @copyright Copyright © 2024 Virgile Broillet P2103804. All rights reserved for studying or personal use.
+            @copyright Copyright © 2024 Virgile Broillet P2103804 & Salma Ahizoune Hiouas P2003590. All rights reserved for studying or personal use.
         */
 
 #include "../hpp/Image1D.hpp"
@@ -20,7 +20,7 @@ using namespace std;
 
 /**
  @brief procedure loadPGM: verifie que le fichier est ouvert et que c'est un pgm, copie de toutes les valeurs du filename dans file
- @param filename: string du chemin du fichier
+ @param filename  string du chemin du fichier
 */
 
 void Image1D::loadPGM(const string& filename) {
@@ -50,7 +50,7 @@ void Image1D::loadPGM(const string& filename) {
 
 /**
  @brief procedure savePGM: verifie que le fichier est ouvert et enregistre l'image filename dans file
- @param filename: string
+ @param filename ,  string
 */
 
 void Image1D::savePGM(const string& filename) const {
@@ -75,10 +75,10 @@ void Image1D::savePGM(const string& filename) const {
 
 /**
  @brief fonction getPixel qui prend en parametre les coordonnees d'un pixel et renvoi l'intensité de ce pixel
- @param i, j: des entiers
+ @param i  un entier
+ @param j un entier
  @return un entier
 */
-
 int Image1D::getPixel(int i, int j) const {
     /**
      @details data est un vector contenant l'intensité de chaque pixel
@@ -86,90 +86,14 @@ int Image1D::getPixel(int i, int j) const {
     return data[index1D(i, j)];
 }
 
-void Image1D::setPixel(int i, int j, int value) {
-    data[index1D(i, j)] = value;
-}
-
 /**
  @brief fonction index1D qui prends en parametre les coordonnees d'un pixel et retourne l'indice de ce pixel
- @param i, j: des entiers 
+ @param i un  entier
+ @param j un enrtier
  @return un entier
 */
-
 int Image1D::index1D(int i, int j) const {
     return ((i * length) + j);
-}
-
-//get pixel ouest du global:
-int Image1D::getPixelW(int i, int j) const{
-    //verifier si le voisin existe
-    if(i==0){
-        return -1;
-    }
-    return data[index1D(i, j-1)];
-}
-
-//get pixel Sud Ouest
-int Image1D::getPixelSW(int i, int j)const{
-    //verifier si le voisin existe
-    if(i==0 || j==0){
-        return -1;
-    }
-    return data[index1D(i-1, j-1)];
-}
-
-//get pixel Sud
-int Image1D::getPixelS(int i, int j) const{
-    //verifier si le voisin existe
-    if(j==0){
-        return -1;
-    }
-    return data[index1D(i-1, j)];
-}
-
-//get pixel Sud Est
-int Image1D::getPixelSE(int i, int j) const{
-    //verifier si le voisin existe
-    if(i==length || j==0){
-
-    }
-    return data[index1D(i-1, j+1)];
-}
-
-//get pixel Est
-int Image1D::getPixelE(int i, int j) const{
-    //verifier si le voisin existe
-    if(i==length){
-        return -1;
-    }
-    return data[index1D(i-1, j-1)];
-}
-
-//get pixel Nord Est
-int Image1D::getPixelNE(int i, int j) const{
-    //verifier si le voisin existe
-    if(i==length || j==width){
-        return -1;
-    }
-    return data[index1D(i, j+1)];
-}
-
-//get pixel Nord
-int Image1D::getPixelN(int i, int j) const{
-    //verifier si le voisin existe
-    if(j==width){
-        return -1;
-    }
-    return data[index1D(i+1, j)];
-}
-    
-//get pixel Nord Ouest
-int Image1D::getPixelNW(int i, int j) const{
-    //verifier si le voisin existe
-    if(i==0 || j==width){
-        return -1;
-    }
-    return data[index1D(i+1, j-1)];
 }
 
 /**
