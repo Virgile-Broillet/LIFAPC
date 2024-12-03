@@ -160,7 +160,7 @@ void Image1D::multiSourceDijkstra(const Image1D& image, vector<int>& distances, 
     for (int i = 0; i < n; ++i) {
         if (image.data[i] == BLACK_PIXEL) { // BLACK_PIXEL est une constante représentant les pixels noirs initialisé à 0
             distances[i] = 0;
-            pq.emplace(0, i);
+            pq.push(make_pair(0, i));
         }
     }
 
@@ -197,7 +197,7 @@ void Image1D::multiSourceDijkstra(const Image1D& image, vector<int>& distances, 
                 if (newDist < distances[neighbor]) {
                     distances[neighbor] = newDist;
                     predecessors[neighbor] = current;
-                    pq.emplace(newDist, neighbor);
+                    pq.push(make_pair(newDist, neighbor));
                 }
             }
         }
