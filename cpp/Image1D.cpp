@@ -18,16 +18,26 @@
 
 using namespace std;
 
+/**
+ @brief procedure loadPGM: verifie que le fichier est ouvert et que c'est un pgm, copie de toutes les valeurs du filename dans file
+ @param filename: string du chemin du fichier
+*/
+
 void Image1D::loadPGM(const string& filename) {
     ifstream file(filename);
-    //fichier ouvert?
+    /** @details verification de l'ouverture du dossier
+    */
     if (!file.is_open()) throw runtime_error("Impossible d'ouvrir le fichier.");
 
-    //fichier pgm?
+    /** @details verification du format de filename
+    */
     string header;
     file >> header;
     if (header != "P2") throw runtime_error("Format PGM non valide.");
 
+    /** @details copie des donnees length, width, maxIntensity dans file
+            redimension du vector data pour prendre tous les pixels de filename
+    */
     file >> length >> width >> maxIntensity;
     data.resize(length * width);
 
@@ -38,10 +48,19 @@ void Image1D::loadPGM(const string& filename) {
     file.close();
 }
 
+/**
+ @brief procedure savePGM: verifie que le fichier est ouvert et enregistre l'image filename dans file
+ @param filename: string
+*/
+
 void Image1D::savePGM(const string& filename) const {
     ofstream file(filename);
+    /** @details verification de l'ouverture du dossier
+    */
     if (!file.is_open()) throw runtime_error("Impossible de sauvegarder le fichier.");
 
+    /** @details ecrit dans le file les donnees du filename
+    */
     file << "P2\n" << length << " " << width << "\n" << maxIntensity << "\n";
 
     for (int i = 0; i < width; ++i) {
@@ -54,13 +73,28 @@ void Image1D::savePGM(const string& filename) const {
     file.close();
 }
 
+/**
+ @brief fonction getPixel qui prend en parametre les coordonnees d'un pixel et renvoi l'intensité de ce pixel
+ @param i, j: des entiers
+ @return un entier
+*/
+
 int Image1D::getPixel(int i, int j) const {
+    /**
+     @details data est un vector contenant l'intensité de chaque pixel
+    */
     return data[index1D(i, j)];
 }
 
 void Image1D::setPixel(int i, int j, int value) {
     data[index1D(i, j)] = value;
 }
+
+/**
+ @brief fonction index1D qui prends en parametre les coordonnees d'un pixel et retourne l'indice de ce pixel
+ @param i, j: des entiers 
+ @return un entier
+*/
 
 int Image1D::index1D(int i, int j) const {
     return ((i * length) + j);
@@ -138,11 +172,19 @@ int Image1D::getPixelNW(int i, int j) const{
     return data[index1D(i+1, j-1)];
 }
 
+/**
+ @brief fonction qui renvoie la longueur de l'image 
+ @return un entier: la longueur
+*/
 int Image1D::getLength() const
 {
     return this->length;
 }
 
+/**
+ @brief fonction qui renvoie la largeur de l'image 
+ @return un entier: la largeur
+*/
 int Image1D::getWidth() const
 {
     return this->width;
