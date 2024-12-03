@@ -154,7 +154,7 @@ void Image1D::multiSourceDijkstra(const Image1D& image, vector<int>& distances, 
     distances.assign(n, INF);
     predecessors.assign(n, -1);
     vector<bool> visited(n, false);
-    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<>> pq;
+    priority_queue<pair<int, int>, vector<pair<int, int> >, greater<pair<int, int> > > pq;
 
     // Initialisation des sources (pixels noirs)
     for (int i = 0; i < n; ++i) {
@@ -165,7 +165,7 @@ void Image1D::multiSourceDijkstra(const Image1D& image, vector<int>& distances, 
     }
 
     // Directions pour les voisins (horizontal, vertical, diagonal)
-    vector<pair<int, int>> directions = {
+    vector<pair<int, int> > directions = {
         {0, 1}, {0, -1}, {1, 0}, {-1, 0},
         {1, 1}, {1, -1}, {-1, 1}, {-1, -1}
     };
