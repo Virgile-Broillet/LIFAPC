@@ -165,11 +165,17 @@ void Image1D::multiSourceDijkstra(const Image1D& image, vector<int>& distances, 
     }
 
     // Directions pour les voisins (horizontal, vertical, diagonal)
-    vector<pair<int, int> > directions = {
-        {0, 1}, {0, -1}, {1, 0}, {-1, 0},
-        {1, 1}, {1, -1}, {-1, 1}, {-1, -1}
-    };
+    vector<pair<int, int> > directions;
+    directions.push_back(make_pair(0, 1));
+    directions.push_back(make_pair(0, -1));
+    directions.push_back(make_pair(1, 0));
+    directions.push_back(make_pair(-1, 0));
+    directions.push_back(make_pair(1, 1));
+    directions.push_back(make_pair(1, -1));
+    directions.push_back(make_pair(-1, 1));
+    directions.push_back(make_pair(-1, -1));
 
+    
     // Dijkstra
     while (!pq.empty()) {
         auto [currentDist, current] = pq.top();

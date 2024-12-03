@@ -21,8 +21,7 @@ void afficherMenu() {
     cout << "4. Sauvegarder l'image de distance dans un fichier PGM" << endl;
     cout << "5. Projection d'un pixel sur une forme" << endl;
     cout << "6. Construire l'image de distance de l'union de deux formes" << endl;
-    cout << "7. Projection d'un point sur l'union de deux formes" << endl;
-    cout << "8. Quitter" << endl;
+    cout << "7. Quitter" << endl;
 }
 
 
