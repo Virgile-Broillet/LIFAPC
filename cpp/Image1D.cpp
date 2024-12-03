@@ -9,6 +9,7 @@
 
 #include "../hpp/Image1D.hpp"
 #include <iostream>
+#include <queue>
 #include "fstream"
 
 #define BLACK_PIXEL 0
