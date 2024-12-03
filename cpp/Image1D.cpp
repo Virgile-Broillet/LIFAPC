@@ -209,6 +209,18 @@ void Image1D::multiSourceDijkstra(const Image1D& image, vector<int>& distances, 
             }
         }
     }
+    
+    int maxDistance = *max_element(distances.begin(), distances.end());
+        if (maxDistance == INF) maxDistance = 0; // Évite la division par zéro
+
+        // Étape 2 : Normaliser les distances entre 0 et 255
+        for (int i = 0; i < n; ++i) {
+            if (distances[i] == INF) {
+                distances[i] = 255; // Pixels non atteignables : blanc pur
+            } else {
+                distances[i] = (distances[i] * 255) / maxDistance;
+            }
+        }
 }
 
 
@@ -305,4 +317,3 @@ void Image1D::projectionPixel(const vector<int>& distances, const vector<int>& p
     }
     cout << endl;
 }
-

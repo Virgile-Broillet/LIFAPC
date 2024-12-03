@@ -78,5 +78,7 @@ public:
     void savePredecessors(const string& filename, const vector<int>& predecessors) const;
 
     void projectionPixel(const vector<int>& distances, const vector<int>& predecessors);
+    
+    void multiplyImageValues(int factor, int maxVal);
 
 };
