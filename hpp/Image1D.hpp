@@ -24,17 +24,23 @@ private:
     vector<int> data; // Pixels de l'image en tableau 1D
     
 public:
-    // Constructeur par défaut
+    /**
+     @brief constructeur par défaut
+     **/
     Image1D() : length(0), width(0), maxIntensity(255), data() {}
 
-    // Constructeur avec initialisation
+    /**
+     @brief Constructeur avec initialisation
+     */
     Image1D(int length, int width, int maxIntensity = 255)
         : length(length), width(width), maxIntensity(maxIntensity), data(length * width, 255) {}
     
-    void loadPGM(const string& filename); // Charger une image PGM
-    void savePGM(const string& filename) const; // Sauvegarder en PGM
+    //      ====== FONCTION DE CHARGEMENT / SAUVGARDE D'IMAGE ======
     
-    // Accès aux pixels
+    void loadPGM(const string& filename);
+    void savePGM(const string& filename) const;
+    
+    //      ====== FONCTION D'UTILITÉ ======
     int getPixel(int i, int j) const;
     void setPixel(int i, int j, int value);
 
@@ -68,6 +74,8 @@ public:
     int getLength() const;
     
     int getWidth() const;
+    
+    //      ====== MULTI-SOURCES DIJKSTRA ======
         
     void multiSourceDijkstra(const Image1D& image, vector<int>& distances, vector<int>& predecessors);
     

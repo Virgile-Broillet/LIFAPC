@@ -148,25 +148,43 @@ int Image1D::getWidth() const
     return this->width;
 }
 
+/**
+ @name multiSourceDijkstra(const Image1D& image, vector<int>& distances, vector<int>& predecessors)
+ @brief Effectue l'algorithme de Dijkstra sur une image 1D pour calculer les distances minimal et mettre a l'échelle pour pouvoir faire un dégradé chromatiqu .
+ @param image , reference constante vers l'image source de type Image1D.
+ @param distances , vecteur de sortie contenant les distances minimals pour chaques pixels. normalisée entre 0 et 255
+ @param predecessors , vecteur de sortie contenant les prédécésseurs de chaque pixels. -1 veut dire aucun prédécesseurs
+ */
 void Image1D::multiSourceDijkstra(const Image1D& image, vector<int>& distances, vector<int>& predecessors) {
     int n = image.length * image.width;
     const int INF = INT_MAX;
     
-    // Initialisation des distances et prédécesseurs
+    /**
+     @details
+     - initialisations des données (disatnce à infini) et prédécesseur à -1)
+     - priority_queue représentation d'une file de prioritée : chaque elemt sera un paire de deux entiers, avec greater on change l'ordre de priorité de décroissant à croissant. pq est le nom de la file de priorité
+     */
     distances.assign(n, INF);
     predecessors.assign(n, -1);
     vector<bool> visited(n, false);
     priority_queue<pair<int, int>, vector<pair<int, int> >, greater<pair<int, int> > > pq;
 
-    // Initialisation des sources (pixels noirs)
+    /**
+     @details
+     - Initialisations des sources (pixels noirs)
+     - Ici BLACK_PIXEL est un constante défini plus haut représentant les pixels noirs initialisés à 0
+     */
     for (int i = 0; i < n; ++i) {
-        if (image.data[i] == BLACK_PIXEL) { // BLACK_PIXEL est une constante représentant les pixels noirs initialisé à 0
+        if (image.data[i] == BLACK_PIXEL) {
             distances[i] = 0;
             pq.push(make_pair(0, i));
         }
     }
 
-    // Directions pour les voisins (horizontal, vertical, diagonal)
+    /**
+     @details
+     -  On initialise les directions pour les voisins (horizontal, vertical et diagonal)
+     */
     vector<pair<int, int> > directions;
     directions.push_back(make_pair(0, 1));
     directions.push_back(make_pair(0, -1));
@@ -178,7 +196,10 @@ void Image1D::multiSourceDijkstra(const Image1D& image, vector<int>& distances, 
     directions.push_back(make_pair(-1, -1));
 
     
-    // Dijkstra
+    /**
+     @details
+     - On effectue le théorème de Dijkstra
+     */
     while (!pq.empty()) {
         auto [currentDist, current] = pq.top();
         pq.pop();
@@ -189,7 +210,9 @@ void Image1D::multiSourceDijkstra(const Image1D& image, vector<int>& distances, 
         int x = current / image.width;
         int y = current % image.width;
 
-        // Parcourir les voisins
+        /**
+         @details parcours des voisins
+         */
         for (const auto& [dx, dy] : directions) {
             int nx = x + dx;
             int ny = y + dy;
@@ -198,7 +221,11 @@ void Image1D::multiSourceDijkstra(const Image1D& image, vector<int>& distances, 
                 int neighbor = nx * image.width + ny;
                 if (visited[neighbor]) continue;
 
-                // Calcul du coût
+                /**
+                 @details calcul du cout pour passer d'un noeud a un autre
+                 - Déplacement diagonal : coût de complixité 3
+                 - Déplacement horizontaux ou vertical : coût de compléxité 2
+                 */
                 int cost = (abs(dx) + abs(dy) == 2) ? 3 : 2;
                 int newDist = currentDist + cost;
 
@@ -211,13 +238,21 @@ void Image1D::multiSourceDijkstra(const Image1D& image, vector<int>& distances, 
         }
     }
     
+    /**
+     @details
+     - On normalise les elements pour pouvoir avoir un dégradé chromatique noir profond étant le pixel noir lui même.
+     -  Plus on s'éloigne du Pixel noir, plus les pixels sont claire, jusqu'a atteindre le blanc profond.
+     */
     int maxDistance = *max_element(distances.begin(), distances.end());
-        if (maxDistance == INF) maxDistance = 0; // Évite la division par zéro
+        if (maxDistance == INF) maxDistance = 0; /** @details on évite la diviison par 0 */
 
-        // Étape 2 : Normaliser les distances entre 0 et 255
+        /**
+         @details
+         - On normalise les distance en 0 et 255.
+         */
         for (int i = 0; i < n; ++i) {
             if (distances[i] == INF) {
-                distances[i] = 255; // Pixels non atteignables : blanc pur
+                distances[i] = 255; /** @details Pixel inateignable, on le normalise à blanc pûre (255) )*/
             } else {
                 distances[i] = (distances[i] * 255) / maxDistance;
             }
@@ -225,12 +260,26 @@ void Image1D::multiSourceDijkstra(const Image1D& image, vector<int>& distances, 
 }
 
 
+/**
+ @name saveDistancesPGM(const string& filename, const vector<int>& distances)
+ @brief Sauvegarde d'une image PGM représentant les distances calculées
+ @param filename , nom du fichier dans lequel l'image sera sauvegardée
+ @param distances , vecteur contenant les distances a sauvegardées chaque valeur représentant une intensité de gris (entre 0 et 255) d'un pixel.
+ */
 void Image1D::saveDistancesPGM(const string& filename, const vector<int>& distances) const {
     ofstream file(filename);
     if (!file.is_open()) throw runtime_error("Impossible de sauvegarder le fichier.");
 
+    /**
+     @details
+     - On remplis les premieres lignes du fichiers avec les informations de bases, P2 pour le format PGM, la lngueur et la hauteur ainsi que le maxIntensity
+     */
     file << "P2\n" << length << " " << width << "\n" << maxIntensity << "\n";
 
+    /**
+     @details
+     - On copie toutes les informations du vector data dans notre file.
+     */
     for (int i = 0; i < length; ++i) {
         for (int j = 0; j < width; ++j) {
             file << distances[index1D(i, j)] << " ";
@@ -241,8 +290,18 @@ void Image1D::saveDistancesPGM(const string& filename, const vector<int>& distan
     file.close();
 }
 
+/**
+ @name createImageUnion(Image1D& image2, vector<int>& distancesUnion, vector<int>& predecessorsUnion)
+ @brief Créer une image de distance représentant l'union des deux images.
+ @param image2 , une deuxieme image de type Image1D utilisé pour calculer les distances
+ @param distancesUnion , Vecteur de sortie où seront stocker les distances combinées des deux images
+ @param predecessorsUnion , Vecteur de sortie où seront stocker les prédécesseurs combinés des deux images.
+ */
 void Image1D::createImageUnion(Image1D& image2, vector<int>& distancesUnion, vector<int>& predecessorsUnion) {
-    // Nous combinons les images de distance des deux formes
+    /**
+     @details
+     - On initialise l'image1 avec l'image importé de la classe
+     */
     Image1D image1;
     this->length = image1.getLength();
     this->width = image1.getWidth();
@@ -254,10 +313,17 @@ void Image1D::createImageUnion(Image1D& image2, vector<int>& distancesUnion, vec
     vector<int> distances2(length * width);
     vector<int> predecessors2(length * width);
 
+    /**
+     @details
+     - On fait appel a Dijkstra sur les deux images.
+     **/
     image1.multiSourceDijkstra(image1, distances1, predecessors1);
     image2.multiSourceDijkstra(image2, distances2, predecessors2);
 
-    // Combinaison des deux images de distance
+    /**
+     @details
+     - On combine les deux images pour faire leur Union.
+     */
     for (int i = 0; i < length * width; ++i) {
         if (distances1[i] < distances2[i]) {
             distancesUnion[i] = distances1[i];
@@ -271,10 +337,20 @@ void Image1D::createImageUnion(Image1D& image2, vector<int>& distancesUnion, vec
     cout << "Image de distance de l'union construite !" << endl;
 }
 
+/**
+ @name savePredecessors(const string& filename, const vector<int>& predecessors)
+ @brief Sauvegarde le vecteur des prédécesseurs
+ @param filename , le chemin complet ou le nom de fichier ou sauvgardé les prédécesseurs
+ @param predecessors , le vecteur prédécesseur a sauvgardé
+ */
 void Image1D::savePredecessors(const string& filename, const vector<int>& predecessors) const {
     ofstream file(filename);
     if (!file.is_open()) throw runtime_error("Impossible de sauvegarder le fichier.");
 
+    /**
+     @details
+     - on copie toutes les informations du vecteur dans le fichier
+     */
     for (int pred : predecessors) {
         file << pred << " ";
     }
@@ -282,8 +358,14 @@ void Image1D::savePredecessors(const string& filename, const vector<int>& predec
     file.close();
 }
 
+/**
+ @name projectionPixel(const vector<int>& distances, const vector<int>& predecessors)
+ @brief Projette un pixel donnée vers le pixel noir le plus proche et affiche le chemin le plus cours pour y acceder en fonction de la compléxité calculer plus haut
+ @param distances , Vecteur contenant les distances calculées à partir des pixels noirs.
+ @param predecessors , Vecteur contenant les prédécesseurs de chaque pixel dans le chemin le plus court.
+ */
 void Image1D::projectionPixel(const vector<int>& distances, const vector<int>& predecessors) {
-    int x= 0, y= 0; // Coordonnées du pixel d'intérêt
+    int x= 0, y= 0; /** @details coordonnées du Pixel d'interêt **/
     int length = this->length;
     int width = this->width;
     
@@ -291,9 +373,9 @@ void Image1D::projectionPixel(const vector<int>& distances, const vector<int>& p
     cout << "X (largeur) : "; cin >> x;
     cout << "Y (hauteur) : "; cin >> y;
 
-    int idx = y * width + x;  // Utiliser y pour la hauteur et x pour la largeur dans le calcul de l'indice
+    int idx = y * width + x;  /** @details On utilise  y pour la hauteur et x pour la largeur dans le calcul de l'indice */
 
-    if (x < 0 || x >= width || y < 0 || y >= length) {  // Vérifier les dimensions avec x en largeur et y en hauteur
+    if (x < 0 || x >= width || y < 0 || y >= length) {  /** @details On vérifie  les dimensions avec x en largeur et y en hauteur */
         cout << "Coordonnées invalides : x=" << x << ", y=" << y << ", longeur : " << length << ", largeur : " << width <<endl;
         return;
     }
@@ -310,10 +392,9 @@ void Image1D::projectionPixel(const vector<int>& distances, const vector<int>& p
 
     cout << "Distance depuis (" << x << ", " << y << ") : " << distances[idx] << endl;
 
-    // Remonter le chemin
     cout << "Chemin le plus court depuis (" << x << ", " << y << ") :";
     while (idx != -1) {
-        cout << " (" << idx % width << ", " << idx / width << ")"; // Afficher les coordonnées avec x en largeur et y en hauteur
+        cout << " (" << idx % width << ", " << idx / width << ")"; /** @details On affiche les coordonnées avec x en largeur et y en hauteur */
         idx = predecessors[idx];
     }
     cout << endl;
