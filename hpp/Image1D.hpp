@@ -19,7 +19,7 @@ class Image1D {
 private:
     unsigned int length; // Longueur de l'image
     unsigned int width; // Largeur de l'image
-    int maxIntensity; // Intensité maximale (255 pour PGM)
+    int maxIntensity; // Intensité maximale (255)
     
     vector<int> data; // Pixels de l'image en tableau 1D
     
