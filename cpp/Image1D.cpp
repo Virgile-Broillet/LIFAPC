@@ -26,7 +26,6 @@ void Image1D::loadPGM(const string& filename) {
     file >> header;
     if (header != "P2") throw runtime_error("Format PGM non valide.");
 
-    //
     file >> length >> width >> maxIntensity;
     data.resize(length * width);
 
@@ -206,9 +205,9 @@ void Image1D::multiSourceDijkstra(const Image1D& image, vector<int>& distances, 
 }
 
 
-void Image1D::saveDistancesPGM(const std::string& filename, const std::vector<int>& distances) const {
-    std::ofstream file(filename);
-    if (!file.is_open()) throw std::runtime_error("Impossible de sauvegarder le fichier.");
+void Image1D::saveDistancesPGM(const string& filename, const vector<int>& distances) const {
+    ofstream file(filename);
+    if (!file.is_open()) throw runtime_error("Impossible de sauvegarder le fichier.");
 
     file << "P2\n" << length << " " << width << "\n" << maxIntensity << "\n";
 
@@ -252,9 +251,9 @@ void Image1D::createImageUnion(Image1D& image2, vector<int>& distancesUnion, vec
     cout << "Image de distance de l'union construite !" << endl;
 }
 
-void Image1D::savePredecessors(const std::string& filename, const std::vector<int>& predecessors) const {
-    std::ofstream file(filename);
-    if (!file.is_open()) throw std::runtime_error("Impossible de sauvegarder le fichier.");
+void Image1D::savePredecessors(const string& filename, const vector<int>& predecessors) const {
+    ofstream file(filename);
+    if (!file.is_open()) throw runtime_error("Impossible de sauvegarder le fichier.");
 
     for (int pred : predecessors) {
         file << pred << " ";

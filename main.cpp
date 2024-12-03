@@ -9,6 +9,10 @@
 
 #define MAX __INT_MAX__
 
+/**
+ @name afficherMenu()
+ @brief fonction qui affiche un menu "graphique" dans le terminal
+ */
 void afficherMenu() {
     cout << "==== Menu ====" << endl;
     cout << "1. Charger une forme depuis un fichier PGM" << endl;
